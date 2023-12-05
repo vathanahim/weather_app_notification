@@ -6,7 +6,7 @@ import os
 
 
 def get_weather_data(mtn_name:str):
-  weather_api_key = os.environ['WEATHER_API']
+  weather_api_key = os.environ.get['WEATHER_API']
   resorts_name = {'sugar mtn':['36.13022197817641', '-81.85925287689757']}
   sugar_lat, sugar_lon = resorts_name['sugar mtn']
   exclude = 'alerts,current,minutely,hourly'
