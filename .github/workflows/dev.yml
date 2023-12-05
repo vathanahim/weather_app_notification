@@ -1,8 +1,8 @@
-name: Scheduled Job
+name: Weather API Job
 
 on:
   schedule:
-    - cron: '0 18 * * *'  # Run every day at 6 PM UTC
+    - cron: '0 16 * * *'  # Run every day at 6 PM UTC
 
 jobs:
   run-script:
