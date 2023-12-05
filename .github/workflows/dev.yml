@@ -2,7 +2,9 @@ name: Weather API Job
 
 on:
   schedule:
-    - cron: '0 16 * * *'  # Run every day at 4 PM UTC
+    - cron: '0 23 * * *'  # Run every day at 4 PM UTC
+  workflow_dispatch:
+ 
 
 jobs:
   run-script:
