@@ -1,7 +1,7 @@
 import requests
-from datetime import datetime, timezone
+from datetime import datetime
 import smtplib
-from logging import exception
+
 
 
 def get_weather_data(mtn_name:str):
