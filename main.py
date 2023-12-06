@@ -6,8 +6,8 @@ import os
 
 
 def get_weather_data(mtn_name:str):
-  weather_api_key = os.environ.get('WEATHER_API')
-  resorts_name = {'sugar mtn':['36.13022197817641', '-81.85925287689757']}
+  weather_api_key = 'fa801458f0caf0a1ce9e315adb94f07a'
+  resorts_name = {'sugar mtn':['36.13022197817641', '-81.85925287689757'], 'snowshoe mtn':['38.414103', '-79.997095']}
   sugar_lat, sugar_lon = resorts_name['sugar mtn']
   exclude = 'alerts,current,minutely,hourly'
   req = f'https://api.openweathermap.org/data/3.0/onecall?lat={sugar_lat}&lon={sugar_lon}&&units=imperial&exclude={exclude}&appid={weather_api_key}'
@@ -15,36 +15,62 @@ def get_weather_data(mtn_name:str):
   data = response.json()
   return mtn_name, data
 
+def visualize_weather_data(weather_data):
+    if not weather_data:
+        return "No weather data available."
+
+    visualization = []
+    for date, data in weather_data.items():
+        summary = data[0]
+        precipitation_rate = data[2]
+
+        # Construct the visualization string
+        visualization.append(
+            f"Date: {date}, Summary: {summary}, Precipitation Rate: {precipitation_rate}"
+        )
+
+    return visualization
 
 def get_text_data (data):
   data_dict = {}
   for i in range(len(data['daily'])):
-    date = datetime.utcfromtimestamp(data['daily'][i]['dt'])
-    formatted_date = date.strftime('%m-%d-%Y')
-    if ('snow' in data['daily'][i]['summary']):
-      data_dict[formatted_date] = (data['daily'][i]['summary'])
+      date = datetime.utcfromtimestamp(data['daily'][i]['dt'])
+      formatted_date = date.strftime('%m-%d-%Y')
+      if ('snow' in str(data['daily'][i]['summary'])):
+          data_dict[formatted_date] = [(data['daily'][i]['weather'][0]['main'])]
+          data_dict[formatted_date].append(data['daily'][i]['feels_like'])
+          if ('snow' in data['daily'][i].keys()):
+            data_dict[formatted_date].append(str(data['daily'][i]['snow'])+'mm/h')
   return data_dict
 
-def send_text_message(data_dict, mtn_name:str):
-  recipient_phone = '3364787808'
-  carrier_gateway = 'vtext.com'
 
-  sender_email = 'boardingboys9@gmail.com'
-  sender_password = 'cbce ccek appt rrip'
+def send_text_message(data_msg, mtn_name:str, phone_numer:dict):
+    
+    for i in phone_number.keys():
+        recipient_phone = i
+        carrier_gateway = phone_number[i]
 
-  # Compose the email
-  message = f'{", ".join(data_dict.keys())}'
-  email_body = f'To: {recipient_phone}@{carrier_gateway}\nsnow this week in {mtn_name}!!\n{message}'
+        sender_email = 'boardingboys9@gmail.com'
+        sender_password = 'cbce ccek appt rrip'
+
+        # Split the long message into segments (assuming 160 characters per segment)
+
+        for i in data_msg:
+            # Connect to the SMTP server
+            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                server.starttls()
+                server.login(sender_email, sender_password)
+                email_body = f'To: {recipient_phone}@{carrier_gateway}\nsnow this week in {mtn_name}!!\n{i}'
+                # Send the email
+                server.sendmail(sender_email, f'{recipient_phone}@{carrier_gateway}', email_body)
 
 
-  # Connect to the SMTP server
-  with smtplib.SMTP('smtp.gmail.com', 587) as server:
-      server.starttls()
-      server.login(sender_email, sender_password)
 
-      # Send the email
-      server.sendmail(sender_email, f'{recipient_phone}@{carrier_gateway}', email_body)
 
-mtn_name, data = get_weather_data('sugar mtn')
-data_dict = get_text_data(data)
-send_text_message(data_dict, mtn_name)
+phone_number = {'3364787808':'vtext.com'}
+mountains = ['sugar mtn', 'snowshoe mtn']
+for i in mountains: 
+    mtn_name, data = get_weather_data(i)
+    data_dict = get_text_data(data)
+    data_msg = visualize_weather_data(data_dict)
+    send_text_message(data_msg, mtn_name, phone_number)
