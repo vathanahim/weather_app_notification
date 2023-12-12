@@ -54,15 +54,17 @@ def send_text_message(data_msg, mtn_name:str, phone_numer:dict):
         sender_password = 'cbce ccek appt rrip'
 
         # Split the long message into segments (assuming 160 characters per segment)
-
-        for i in data_msg:
-            # Connect to the SMTP server
-            with smtplib.SMTP('smtp.gmail.com', 587) as server:
-                server.starttls()
-                server.login(sender_email, sender_password)
-                email_body = f'To: {recipient_phone}@{carrier_gateway}\nsnow this week in {mtn_name}!!\n{i}'
-                # Send the email
-                server.sendmail(sender_email, f'{recipient_phone}@{carrier_gateway}', email_body)
+        if (data_msg == "No weather data available."):
+          return print('no data')
+        else:
+          for i in data_msg:
+              # Connect to the SMTP server
+              with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                  server.starttls()
+                  server.login(sender_email, sender_password)
+                  email_body = f'To: {recipient_phone}@{carrier_gateway}\nsnow this week in {mtn_name}!!\n{i}'
+                  # Send the email
+                  server.sendmail(sender_email, f'{recipient_phone}@{carrier_gateway}', email_body)
 
 
 
@@ -73,4 +75,5 @@ for i in mountains:
     mtn_name, data = get_weather_data(i)
     data_dict = get_text_data(data)
     data_msg = visualize_weather_data(data_dict)
-    send_text_message(data_msg, mtn_name, phone_number)
+    if (len(data_msg)>0):
+      send_text_message(data_msg, mtn_name, phone_number)
