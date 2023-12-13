@@ -78,5 +78,5 @@ for i in mountains:
     mtn_name, data = get_weather_data(i)
     data_dict = get_text_data(data)
     data_msg = visualize_weather_data(data_dict)
-    if (len(data_msg)>0):
+    if (data_msg != "No weather data available."):
       send_text_message(data_msg, mtn_name, phone_number)
