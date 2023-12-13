@@ -45,26 +45,29 @@ def get_text_data (data):
 
 
 def send_text_message(data_msg, mtn_name:str, phone_numer:dict):
-    
-    for i in phone_number.keys():
+
+    if (data_msg == "No weather data available."):
+      return print('no data')
+
+    else:
+
+      for i in phone_number.keys():
         recipient_phone = i
         carrier_gateway = phone_number[i]
 
         sender_email = 'boardingboys9@gmail.com'
         sender_password = 'cbce ccek appt rrip'
 
-        # Split the long message into segments (assuming 160 characters per segment)
-        if (data_msg == "No weather data available."):
-          return print('no data')
-        else:
+          # Split the long message into segments (assuming 160 characters per segment)
+        
           for i in data_msg:
               # Connect to the SMTP server
-              with smtplib.SMTP('smtp.gmail.com', 587) as server:
-                  server.starttls()
-                  server.login(sender_email, sender_password)
-                  email_body = f'To: {recipient_phone}@{carrier_gateway}\nsnow this week in {mtn_name}!!\n{i}'
-                  # Send the email
-                  server.sendmail(sender_email, f'{recipient_phone}@{carrier_gateway}', email_body)
+            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                server.starttls()
+                server.login(sender_email, sender_password)
+                email_body = f'To: {recipient_phone}@{carrier_gateway}\nsnow this week in {mtn_name}!!\n{i}'
+                # Send the email
+                server.sendmail(sender_email, f'{recipient_phone}@{carrier_gateway}', email_body)
 
 
 
