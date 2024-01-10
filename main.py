@@ -18,11 +18,12 @@ def get_weather_data(mtn_name:str):
 def visualize_weather_data(weather_data):
     if not weather_data:
         return "No weather data available."
-
+    #check api data and only input to text msg if there's snow
     visualization = []
     for date, data in weather_data.items():
-        summary = data[0]
-        precipitation_rate = data[2]
+        if (data[0] == 'Snow'):
+            summary = data[0]
+            precipitation_rate = data[2]
 
         # Construct the visualization string
         visualization.append(
@@ -40,7 +41,7 @@ def get_text_data (data):
           data_dict[formatted_date] = [(data['daily'][i]['weather'][0]['main'])]
           data_dict[formatted_date].append(data['daily'][i]['feels_like'])
           if ('snow' in data['daily'][i].keys()):
-            data_dict[formatted_date].append(str(data['daily'][i]['snow'])+'mm/h')
+            data_dict[formatted_date].append(str(round((int(data['daily'][i]['snow'])/25.4), 2))+' in/h')
   return data_dict
 
 
