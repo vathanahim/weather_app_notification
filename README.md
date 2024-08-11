@@ -2,7 +2,7 @@
 
 
 ### Description
-This application fetches data from the Open Weather API for areas that have a nearby ski-resort and send a notification via if the forecasts calls for snow for the following week.
+This application fetches data from the Open Weather API for the desired ski-resort area given the coordinates and send a notification via text if the forecasts calls for snow for the following week.
 
 ### Dependencies
 The application is deployed via github action and requires minimal python library dependcies. All of the dependencies are listed in the requirement.txt. It runs on python version 3.8.
